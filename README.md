@@ -1,24 +1,19 @@
-# codewarden
+# SolWarden (codewarden)
 
-To install dependencies:
+v0 scaffold for SDK + CLI Solana smart contract scanner.
 
-```bash
-bun install
-```
-
-To run:
+## Commands
 
 ```bash
-bun run index.ts
+bun run scan .
+bun run scan . --format json
+bun run rules
+bun run typecheck
 ```
 
-This project was created using `bun init` in bun v1.3.3. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+## Current status
 
-### Folder responsibilities
-
-- parser/ → read files, extract analyzable units
-- rule-engine/ → run rules over parser output
-- rules/ → rule modules only (one file per rule later)
-- reporter/ → output formatting
-- types/ → shared contracts
-# solwarden
+- Point 1 locked (v0 scope)
+- Point 2 scaffold complete (parser, rule-engine, rules, reporter)
+- Point 3 minimal contracts complete
+- Point 4 pending your vulnerability input

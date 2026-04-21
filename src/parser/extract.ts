@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { glob } from "glob";
 import type { ParsedFile } from "../types/parsed-file";
@@ -15,15 +15,21 @@ export async function extractParsedFiles(
   const include = options.include ?? DEFAULT_INCLUDE;
   const ignore = options.ignore ?? DEFAULT_IGNORE;
 
-  const files = await glob(include, {
-    cwd: resolvedTarget,
-    absolute: true,
-    nodir: true,
-    ignore,
-  });
+  const targetStats = await stat(resolvedTarget);
+
+  const files = targetStats.isFile()
+    ? [resolvedTarget]
+    : await glob(include, {
+        cwd: resolvedTarget,
+        absolute: true,
+        nodir: true,
+        ignore,
+      });
+
+  const rustFiles = files.filter((filePath) => filePath.endsWith(".rs"));
 
   const parsedFiles = await Promise.all(
-    files.map(async (filePath) => {
+    rustFiles.map(async (filePath) => {
       const source = await readFile(filePath, "utf8");
       return {
         path: filePath,
