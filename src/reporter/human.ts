@@ -1,0 +1,27 @@
+import type { ScanResult } from "../types/scan-result";
+
+export function reportHuman(result: ScanResult): string {
+  const lines = [
+    "SolWarden Scan Summary",
+    `Total findings: ${result.summary.total}`,
+    `Critical: ${result.summary.bySeverity.critical}`,
+    `High: ${result.summary.bySeverity.high}`,
+    `Medium: ${result.summary.bySeverity.medium}`,
+    `Low: ${result.summary.bySeverity.low}`,
+  ];
+
+  if (result.findings.length === 0) {
+    lines.push("No findings yet. Add rules in src/rules to start detection.");
+    return lines.join("\n");
+  }
+
+  lines.push("", "Findings:");
+  for (const finding of result.findings) {
+    lines.push(
+      `- [${finding.severity.toUpperCase()}] ${finding.ruleId} ${finding.file}:${finding.line}:${finding.column}`,
+      `  ${finding.message}`,
+    );
+  }
+
+  return lines.join("\n");
+}

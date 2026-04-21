@@ -1,0 +1,17 @@
+{
+  "name": "codewarden",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "commander": "^14.0.3",
+    "glob": "^13.0.6",
+    "tsx": "^4.21.0"
+  }
+}
