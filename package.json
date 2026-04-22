@@ -1,22 +1,20 @@
 {
-  "name": "codewarden",
-  "module": "index.ts",
+  "name": "solwarden",
+  "version": "0.1.4",
   "type": "module",
-  "private": true,
+  "bin": {
+    "solwarden": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "scan": "bun run index.ts scan",
-    "rules": "bun run index.ts rules list",
-    "typecheck": "tsc --noEmit"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^6.0.2"
+    "build": "bun build ./src/cli.ts --outfile ./dist/cli.js --target node",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "commander": "^14.0.3",
-    "glob": "^13.0.6",
-    "tsx": "^4.21.0"
+    "glob": "^13.0.6"
   }
 }

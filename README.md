@@ -1,44 +1,53 @@
-# SolWarden (codewarden)
+# SolWarden
 
-SDK + CLI scanner for common Solana smart contract vulnerability patterns.
+SDK + CLI scanner for common Solana programs vulnerability patterns.
 
-## Install
+SolWarden helps you quickly scan Anchor/native Solana Rust code for risky patterns and get actionable findings with severity, file location, and fix guidance.
+
+## Install (Global)
+
+Global install is required to use `solwarden` directly in terminal.
+
+### npm
 
 ```bash
-bun install
+npm i -g solwarden
 ```
 
-## Commands
-
-### Scan
+### bun
 
 ```bash
-# Scan current directory (human-readable)
-bun run scan .
-
-# Scan specific path
-bun run scan ./fixtures/programs/fixtures
-
-# JSON output (for CI/scripts)
-bun run scan . --format json
-
-# Human output (explicit)
-bun run scan . --format human
+bun add -g solwarden
 ```
 
-### Rules
+## Usage
+
+### Scan a project
 
 ```bash
-# List all registered rules
-bun run rules
-# (alias used internally by CLI: bun run index.ts rules list)
+solwarden scan .
 ```
 
-### Dev checks
+### Scan a specific path
 
 ```bash
-# TypeScript type check
-bun run typecheck
+solwarden scan /path/to/project
+```
+
+### Output formats
+
+```bash
+# Human-readable output (default)
+solwarden scan . --format human
+
+# JSON output (for CI / scripts)
+solwarden scan . --format json
+```
+
+### List rules
+
+```bash
+solwarden rules list
 ```
 
 ## Rule IDs (SW = SolWarden)
@@ -64,7 +73,7 @@ bun run typecheck
   Detects account deserialization paths without nearby discriminator checks.
 
 - **SW007**: Unchecked account usage without validation  
-  Detects critical `UncheckedAccount`/`AccountInfo` usage without nearby owner/signer/seeds constraints.
+  Detects critical `UncheckedAccount`/`AccountInfo` usage without nearby owner/signer/seeds/address constraints.
 
 - **SW008**: Missing post-CPI account reload  
   Detects CPI contexts where accounts may be used after mutation without reload/refresh.
@@ -74,3 +83,43 @@ bun run typecheck
 
 - **SW010**: Missing token authority validation  
   Detects token operations without explicit authority/owner signer validation.
+
+## Exit behavior
+
+- Exit code `0`: scan completed with no findings
+- Exit code `1`: findings detected
+- Exit code `2`: tool/usage error
+
+## Troubleshooting
+
+### `solwarden: command not found`
+
+If you installed with Bun globally, ensure Bun bin path is in your shell PATH:
+
+```bash
+export PATH="$HOME/.bun/bin:$PATH"
+```
+
+Then restart your terminal.
+
+### Use without global install (optional)
+
+```bash
+bunx solwarden scan .
+```
+
+## Who is this for?
+
+- Solana program developers
+- Audit preparation workflows
+- CI pipelines that need quick static checks before deeper review
+
+---
+
+If you find a false positive/negative, open an issue with:
+
+- contract snippet,
+- expected behavior,
+- actual SolWarden output.
+
+---
