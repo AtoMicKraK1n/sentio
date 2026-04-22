@@ -4,10 +4,17 @@ import { reportJson } from "./reporter/json";
 import { runRules } from "./rule-engine/engine";
 import { createRuleRegistry } from "./rule-engine/registry";
 
-export async function scanPath(targetPath: string) {
+export interface ScanPathOptions {
+  ruleId?: string;
+}
+
+export async function scanPath(targetPath: string, options: ScanPathOptions = {}) {
   const files = await extractParsedFiles(targetPath);
   const rules = createRuleRegistry();
-  return runRules(files, rules);
+  const selectedRules = options.ruleId
+    ? rules.filter((rule) => rule.id === options.ruleId)
+    : rules;
+  return runRules(files, selectedRules);
 }
 
 export { reportHuman, reportJson, createRuleRegistry };

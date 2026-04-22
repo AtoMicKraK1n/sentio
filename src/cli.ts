@@ -9,8 +9,22 @@ program
   .command("scan")
   .argument("<path>", "workspace path to scan")
   .option("-f, --format <format>", "output format: human|json", "human")
-  .action(async (pathArg: string, options: { format: string }) => {
-    const result = await scanPath(pathArg);
+  .option("-r, --rule <id>", "only run a specific rule by id")
+  .action(async (pathArg: string, options: { format: string; rule?: string }) => {
+    if (options.format !== "human" && options.format !== "json") {
+      console.error(`Unsupported format: ${options.format}. Use human or json.`);
+      process.exit(1);
+    }
+
+    if (options.rule) {
+      const exists = createRuleRegistry().some((rule) => rule.id === options.rule);
+      if (!exists) {
+        console.error(`Unknown rule id: ${options.rule}`);
+        process.exit(1);
+      }
+    }
+
+    const result = await scanPath(pathArg, { ruleId: options.rule });
 
     if (options.format === "json") {
       console.log(reportJson(result));
