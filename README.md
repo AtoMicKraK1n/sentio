@@ -66,10 +66,11 @@ bun run typecheck
 - **SW007**: Unchecked account usage without validation  
   Detects critical `UncheckedAccount`/`AccountInfo` usage without nearby owner/signer/seeds constraints.
 
-## Current status
+- **SW008**: Missing post-CPI account reload  
+  Detects CPI contexts where accounts may be used after mutation without reload/refresh.
 
-- Point 1 locked (v0 scope)
-- Point 2 scaffold complete (parser, rule-engine, rules, reporter)
-- Point 3 minimal contracts complete
-- Point 4 in progress (rule expansion)
-- Batch 1 implemented: SW001, SW002, SW006, SW007
+- **SW009**: Missing token mint validation  
+  Detects SPL token account usage without explicit expected-mint validation.
+
+- **SW010**: Missing token authority validation  
+  Detects token operations without explicit authority/owner signer validation.
