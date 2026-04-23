@@ -1,23 +1,23 @@
-# SolWarden
+# Sentio
 
 SDK + CLI scanner for common Solana programs vulnerability patterns.
 
-SolWarden helps you quickly scan Anchor/native Solana Rust code for risky patterns and get actionable findings with severity, file location, and fix guidance.
+Sentio helps you quickly scan Anchor/native Solana Rust code for risky patterns and get actionable findings with severity, file location, and fix guidance.
 
 ## Install (Global)
 
-Global install is required to use `solwarden` directly in terminal.
+Global install is required to use `sentio` directly in terminal.
 
 ### npm
 
 ```bash
-npm i -g solwarden
+npm i -g sentio
 ```
 
 ### bun
 
 ```bash
-bun add -g solwarden
+bun add -g sentio
 ```
 
 ## Usage
@@ -25,34 +25,34 @@ bun add -g solwarden
 ### Scan a project
 
 ```bash
-solwarden scan .
+sentio scan .
 ```
 
 ### Scan a specific path
 
 ```bash
-solwarden scan /path/to/project
+sentio scan /path/to/project
 ```
 
 ### Output formats
 
 ```bash
 # Human-readable output (default)
-solwarden scan . --format human
+sentio scan . --format human
 
 # JSON output (for CI / scripts)
-solwarden scan . --format json
+sentio scan . --format json
 ```
 
 ### List rules
 
 ```bash
-solwarden rules list
+sentio rules list
 ```
 
-## Rule IDs (SW = SolWarden)
+## Rule IDs (SW = Solana Warden)
 
-`SW` means **SolWarden rule**.
+`SW` means **Solana Warden rule**.
 
 - **SW001**: Missing signer or pubkey-only authority validation  
   Detects authority checks that rely on pubkey comparison without signer enforcement.
@@ -92,7 +92,7 @@ solwarden rules list
 
 ## Troubleshooting
 
-### `solwarden: command not found`
+### `sentio: command not found`
 
 If you installed with Bun globally, ensure Bun bin path is in your shell PATH:
 
@@ -105,7 +105,7 @@ Then restart your terminal.
 ### Use without global install (optional)
 
 ```bash
-bunx solwarden scan .
+bunx sentio scan .
 ```
 
 ## Who is this for?
@@ -120,6 +120,6 @@ If you find a false positive/negative, open an issue with:
 
 - contract snippet,
 - expected behavior,
-- actual SolWarden output.
+- actual sentio output.
 
 ---

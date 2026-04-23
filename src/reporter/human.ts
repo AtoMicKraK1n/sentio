@@ -2,7 +2,7 @@ import type { ScanResult } from "../types/scan-result";
 
 export function reportHuman(result: ScanResult): string {
   const lines = [
-    "SolWarden Scan Summary",
+    "Sentio Scan Summary",
     `Total findings: ${result.summary.total}`,
     `Critical: ${result.summary.bySeverity.critical}`,
     `High: ${result.summary.bySeverity.high}`,

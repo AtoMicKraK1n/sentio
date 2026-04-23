@@ -4,7 +4,7 @@ import { scanPath, reportHuman, reportJson, createRuleRegistry } from "./index";
 
 const program = new Command();
 
-program.name("solwarden").description("SolWarden SDK/CLI (v0 scaffold)");
+program.name("sentio").description("Sentio SDK/CLI (v0 scaffold)");
 
 program
   .command("scan")

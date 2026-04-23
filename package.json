@@ -1,10 +1,10 @@
 {
-  "name": "solwarden",
-  "version": "0.1.5",
+  "name": "sentio",
+  "version": "0.1.6",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "solwarden": "./dist/cli.js"
+    "sentio": "./dist/cli.js"
   },
   "files": [
     "dist",
