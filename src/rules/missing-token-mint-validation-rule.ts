@@ -11,7 +11,8 @@ export const missingTokenMintValidationRule: Rule = {
     const findings = [];
     const lines = file.source.split("\n");
 
-    const tokenFlowRegex = /\b(TokenAccount|InterfaceAccount\s*<\s*'info\s*,\s*TokenAccount\s*>|transfer_checked|mint_to|burn|token::transfer)\b/g;
+    const tokenFlowRegex =
+      /\b(TokenAccount|InterfaceAccount\s*<\s*'info\s*,\s*TokenAccount\s*>|transfer_checked|mint_to|burn|token::transfer)\b/g;
 
     for (const match of file.source.matchAll(tokenFlowRegex)) {
       const idx = match.index ?? 0;
@@ -43,4 +44,5 @@ export const missingTokenMintValidationRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

@@ -11,7 +11,8 @@ export const missingAccountDiscriminatorCheckRule: Rule = {
     const findings = [];
     const lines = file.source.split("\n");
 
-    const deserializeRegex = /\b(Account::try_from|try_deserialize|try_from_slice_unchecked|from_account_info)\b/g;
+    const deserializeRegex =
+      /\b(Account::try_from|try_deserialize|try_from_slice_unchecked|from_account_info)\b/g;
 
     for (const match of file.source.matchAll(deserializeRegex)) {
       const idx = match.index ?? 0;
@@ -43,4 +44,5 @@ export const missingAccountDiscriminatorCheckRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

@@ -11,7 +11,8 @@ export const missingSignerAuthRule: Rule = {
     const findings = [];
     const lines = file.source.split("\n");
 
-    const accountInfoAuthorityRegex = /\b(authority|admin|owner|payer)\w*\s*:\s*AccountInfo<'info>/gi;
+    const accountInfoAuthorityRegex =
+      /\b(authority|admin|owner|payer)\w*\s*:\s*AccountInfo<'info>/gi;
     for (const match of file.source.matchAll(accountInfoAuthorityRegex)) {
       findings.push(
         createFinding({
@@ -22,7 +23,8 @@ export const missingSignerAuthRule: Rule = {
           file: file.path,
           source: file.source,
           index: match.index ?? 0,
-          fixGuidance: "Use Signer<'info> for authority accounts or enforce explicit is_signer checks.",
+          fixGuidance:
+            "Use Signer<'info> for authority accounts or enforce explicit is_signer checks.",
         }),
       );
     }
@@ -31,7 +33,12 @@ export const missingSignerAuthRule: Rule = {
     for (const match of file.source.matchAll(keyComparisonRegex)) {
       const idx = match.index ?? 0;
       const lineNo = file.source.slice(0, idx).split("\n").length - 1;
-      const hasSignerCheckNearby = nearbyHasPattern(lines, lineNo, 6, /\bis_signer\b/);
+      const hasSignerCheckNearby = nearbyHasPattern(
+        lines,
+        lineNo,
+        6,
+        /\bis_signer\b/,
+      );
       if (!hasSignerCheckNearby) {
         findings.push(
           createFinding({
@@ -51,4 +58,5 @@ export const missingSignerAuthRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

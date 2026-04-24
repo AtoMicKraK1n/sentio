@@ -46,4 +46,5 @@ export const nonCanonicalPdaRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

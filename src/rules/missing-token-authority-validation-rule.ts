@@ -11,14 +11,20 @@ export const missingTokenAuthorityValidationRule: Rule = {
     const findings = [];
     const lines = file.source.split("\n");
 
-    const tokenOpsRegex = /\b(transfer_checked|transfer|mint_to|burn|approve|revoke|set_authority|token::)\b/g;
+    const tokenOpsRegex =
+      /\b(transfer_checked|transfer|mint_to|burn|approve|revoke|set_authority|token::)\b/g;
 
     for (const match of file.source.matchAll(tokenOpsRegex)) {
       const idx = match.index ?? 0;
       const lineNo = file.source.slice(0, idx).split("\n").length - 1;
 
       const hasAuthorityValidationNearby =
-        nearbyHasPattern(lines, lineNo, 10, /\b(authority\s*==|owner\s*==|has_one\s*=|constraint\s*=.*authority|token::authority\s*=)\b/) ||
+        nearbyHasPattern(
+          lines,
+          lineNo,
+          10,
+          /\b(authority\s*==|owner\s*==|has_one\s*=|constraint\s*=.*authority|token::authority\s*=)\b/,
+        ) ||
         nearbyHasPattern(lines, lineNo, 10, /\b(is_signer|Signer<'info>)\b/);
 
       if (!hasAuthorityValidationNearby) {
@@ -40,4 +46,5 @@ export const missingTokenAuthorityValidationRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

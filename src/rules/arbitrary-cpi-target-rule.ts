@@ -1,42 +1,54 @@
 import type { Rule } from "../types/rule";
-import { createFinding, nearbyHasPattern } from "./utils";
+import type { Finding } from "../types/finding";
+
+function getLine(source: string, idx: number): number {
+  return source.slice(0, idx).split("\n").length;
+}
 
 export const arbitraryCpiTargetRule: Rule = {
   id: "SW003",
-  title: "Potential arbitrary CPI target",
+  title: "Arbitrary CPI target risk",
+  severity: "high",
   description:
-    "Detects CPI invocations where target program validation is not visible nearby.",
-  severity: "critical",
-  match(file) {
-    const findings = [];
-    const lines = file.source.split("\n");
-    const invokeRegex = /\binvoke(?:_signed)?\s*\(/g;
+    "Detects CPI invocation patterns without nearby/known target program validation.",
+  fixGuidance:
+    "Validate CPI target program IDs explicitly (allowlist or strict address checks) before invocation.",
 
-    for (const match of file.source.matchAll(invokeRegex)) {
-      const idx = match.index ?? 0;
-      const lineNo = file.source.slice(0, idx).split("\n").length - 1;
-      const hasProgramValidationNearby = nearbyHasPattern(
-        lines,
-        lineNo,
-        12,
-        /(check_id\s*\(|program_id\s*(==|!=)|Program<'info,\s*\w+>|require_keys_(eq|neq)!|\btoken_program\b|\bsystem_program\b)/,
-      );
+  match(file, projectIndex) {
+    const findings: Finding[] = [];
+    const cpiRegex =
+      /\binvoke_signed?\s*\(|\bCpiContext::new(?:_with_signer)?\s*\(|\btoken::[a-z_]+\s*\(/g;
 
-      if (!hasProgramValidationNearby) {
-        findings.push(
-          createFinding({
-            ruleId: "SW003",
-            severity: "critical",
-            message:
-              "CPI invocation found without nearby target program validation.",
-            file: file.path,
-            source: file.source,
-            index: idx,
-            fixGuidance:
-              "Explicitly verify CPI target program ID before calling invoke/invoke_signed.",
-          }),
+    const cpiMatches = [...file.source.matchAll(cpiRegex)];
+    if (cpiMatches.length === 0) return findings;
+
+    const hasProgramValidationAnywhere = projectIndex
+      ? [...projectIndex.ownerOrConstraintEvidenceByFile.values()].some((arr) =>
+          arr.some((e) =>
+            /program|token_program|system_program|address|owner|constraint\s*=|has_one\s*=/.test(
+              e.snippet,
+            ),
+          ),
+        )
+      : /program|token_program|system_program|address|owner|constraint\s*=|has_one\s*=/.test(
+          file.source,
         );
-      }
+
+    if (hasProgramValidationAnywhere) return findings;
+
+    for (const m of cpiMatches) {
+      const idx = m.index ?? 0;
+      findings.push({
+        ruleId: "SW003",
+        severity: "high",
+        message:
+          "CPI call found without clear target program validation in detected context.",
+        file: file.path,
+        line: getLine(file.source, idx),
+        fixGuidance:
+          "Add strict program-id validation before CPI (for example require_keys_eq! against known program IDs).",
+        column: 0,
+      });
     }
 
     return findings;

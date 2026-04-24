@@ -1,66 +1,55 @@
 import type { Rule } from "../types/rule";
-import { createFinding } from "./utils";
+import type { Finding } from "../types/finding";
 
-function hasValidationSignals(windowText: string): boolean {
-  return (
-    /\b(owner\s*=|constraint\s*=|has_one\s*=|seeds\s*=|bump\b|address\s*=)\b/.test(
-      windowText,
-    ) ||
-    /\b(is_signer|Signer<'info>)\b/.test(windowText) ||
-    /\bcheck_\w+\(/.test(windowText)
-  );
-}
-
-function hasCheckComment(line: string, prevLine: string): boolean {
-  return /\/\/\/\s*CHECK:/i.test(line) || /\/\/\/\s*CHECK:/i.test(prevLine);
+function getLine(source: string, idx: number): number {
+  return source.slice(0, idx).split("\n").length;
 }
 
 export const uncheckedAccountUsageRule: Rule = {
   id: "SW007",
   title: "Unchecked account usage without validation",
-  description:
-    "Detects UncheckedAccount/AccountInfo usage without nearby owner/signer/seeds/address constraints.",
   severity: "high",
-  match(file) {
-    const findings = [];
-    const lines = file.source.split("\n");
+  description:
+    "Detects UncheckedAccount/AccountInfo usage without owner/signer/seeds/address constraints.",
+  fixGuidance:
+    "Prefer typed accounts and enforce explicit constraints (owner, signer, seeds, address) before use.",
 
-    const uncheckedDeclRegex =
-      /\bpub\s+([A-Za-z_]\w*)\s*:\s*(UncheckedAccount<'info>|AccountInfo<'info>)/g;
+  match(file, projectIndex) {
+    const findings: Finding[] = [];
+    const uncheckedRegex =
+      /\bUncheckedAccount\s*<\s*'info\s*>|\bAccountInfo\s*<\s*'info\s*>/g;
 
-    for (const match of file.source.matchAll(uncheckedDeclRegex)) {
-      const idx = match.index ?? 0;
-      const fieldName = match[1] ?? "account";
-      const lineNo = file.source.slice(0, idx).split("\n").length - 1;
+    const uncheckedMatches = [...file.source.matchAll(uncheckedRegex)];
+    if (uncheckedMatches.length === 0) return findings;
 
-      const start = Math.max(0, lineNo - 6);
-      const end = Math.min(lines.length - 1, lineNo + 8);
-      const windowLines = lines.slice(start, end + 1);
-      const windowText = windowLines.join("\n");
+    const hasValidationInFile =
+      (projectIndex?.ownerOrConstraintEvidenceByFile.get(file.path)?.length ??
+        0) > 0 ||
+      /\bowner\s*==|has_one\s*=|constraint\s*=|address\s*=|Signer\s*<\s*'info\s*>|\bis_signer\b/.test(
+        file.source,
+      );
 
-      const thisLine = lines[lineNo] ?? "";
-      const prevLine = lines[lineNo - 1] ?? "";
+    const hasValidationAnywhere = projectIndex
+      ? [...projectIndex.ownerOrConstraintEvidenceByFile.values()].some(
+          (arr) => arr.length > 0,
+        )
+      : hasValidationInFile;
 
-      const hasSignals = hasValidationSignals(windowText);
-      const hasCheck = hasCheckComment(thisLine, prevLine);
+    if (hasValidationInFile || hasValidationAnywhere) return findings;
 
-      // Suppress when clearly documented + constrained
-      if (hasCheck && hasSignals) continue;
-
-      if (!hasSignals) {
-        findings.push(
-          createFinding({
-            ruleId: "SW007",
-            severity: "high",
-            message: `Unchecked account field '${fieldName}' appears without nearby validation constraints.`,
-            file: file.path,
-            source: file.source,
-            index: idx,
-            fixGuidance:
-              "Add explicit owner/signer/seeds/address/has_one constraints, or use typed accounts when possible. If intentionally unchecked, document with a precise CHECK rationale.",
-          }),
-        );
-      }
+    for (const m of uncheckedMatches) {
+      const idx = m.index ?? 0;
+      findings.push({
+        ruleId: "SW007",
+        severity: "high",
+        message:
+          "Unchecked account type is used without clear validation evidence in current project context.",
+        file: file.path,
+        line: getLine(file.source, idx),
+        fixGuidance:
+          "Add explicit owner/signer/seeds/address checks (or switch to strongly typed Anchor accounts).",
+        column: 0,
+      });
     }
 
     return findings;

@@ -2,15 +2,17 @@ import type { Finding, Severity } from "../types/finding";
 import type { ParsedFile } from "../types/parsed-file";
 import type { Rule } from "../types/rule";
 import type { ScanResult } from "../types/scan-result";
+import { buildProjectIndex } from "../parser/project-index";
 
 const SEVERITY_BUCKETS: Severity[] = ["low", "medium", "high", "critical"];
 
 export function runRules(files: ParsedFile[], rules: Rule[]): ScanResult {
   const findings: Finding[] = [];
+  const projectIndex = buildProjectIndex(files);
 
   for (const file of files) {
     for (const rule of rules) {
-      const matches = rule.match(file);
+      const matches = rule.match(file, projectIndex);
       findings.push(...matches);
     }
   }

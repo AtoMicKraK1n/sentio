@@ -11,7 +11,8 @@ export const missingOwnerCheckRule: Rule = {
     const findings = [];
     const lines = file.source.split("\n");
 
-    const deserializeRegex = /(try_from_slice\s*\(|from_account_info\s*\(|try_deserialize\s*\()/g;
+    const deserializeRegex =
+      /(try_from_slice\s*\(|from_account_info\s*\(|try_deserialize\s*\()/g;
 
     for (const match of file.source.matchAll(deserializeRegex)) {
       const idx = match.index ?? 0;
@@ -42,4 +43,5 @@ export const missingOwnerCheckRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };

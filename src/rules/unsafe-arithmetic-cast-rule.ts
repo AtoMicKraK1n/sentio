@@ -24,17 +24,16 @@ export const unsafeArithmeticCastRule: Rule = {
 
       if (hasUncheckedArithmetic) {
         const charIndex = line.search(/[+\-*/]/);
-        const sourceIndex = file.source
-          .split("\n")
-          .slice(0, i)
-          .join("\n").length + (i > 0 ? 1 : 0) + Math.max(charIndex, 0);
+        const sourceIndex =
+          file.source.split("\n").slice(0, i).join("\n").length +
+          (i > 0 ? 1 : 0) +
+          Math.max(charIndex, 0);
 
         findings.push(
           createFinding({
             ruleId: "SW005",
             severity: "high",
-            message:
-              "Unchecked arithmetic operation detected in value path.",
+            message: "Unchecked arithmetic operation detected in value path.",
             file: file.path,
             source: file.source,
             index: sourceIndex,
@@ -44,12 +43,14 @@ export const unsafeArithmeticCastRule: Rule = {
         );
       }
 
-      const castMatch = line.match(/\bas\s+(u8|u16|u32|u64|usize|i8|i16|i32|i64|isize)\b/);
+      const castMatch = line.match(
+        /\bas\s+(u8|u16|u32|u64|usize|i8|i16|i32|i64|isize)\b/,
+      );
       if (castMatch?.index !== undefined) {
-        const sourceIndex = file.source
-          .split("\n")
-          .slice(0, i)
-          .join("\n").length + (i > 0 ? 1 : 0) + castMatch.index;
+        const sourceIndex =
+          file.source.split("\n").slice(0, i).join("\n").length +
+          (i > 0 ? 1 : 0) +
+          castMatch.index;
 
         findings.push(
           createFinding({
@@ -69,4 +70,5 @@ export const unsafeArithmeticCastRule: Rule = {
 
     return findings;
   },
+  fixGuidance: "",
 };
