@@ -41,7 +41,6 @@ export const missingPostCpiReloadRule: Rule = {
       const idx = m.index ?? 0;
       findings.push({
         ruleId: "SW008",
-        title: "Missing post-CPI account reload",
         severity: "medium",
         message:
           "CPI call detected, but no reload evidence found before potential subsequent account usage.",
@@ -49,6 +48,7 @@ export const missingPostCpiReloadRule: Rule = {
         line: getLine(file.source, idx),
         fixGuidance:
           "After CPI, reload mutated accounts before reading fields again.",
+        column: 0,
       });
     }
 
