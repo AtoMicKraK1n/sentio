@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { scanPath, reportHuman, reportJson, createRuleRegistry } from "./index";
+import pkg from "../package.json";
 
 const program = new Command();
 
-program.name("sentio").description("Sentio SDK/CLI (v0 scaffold)");
+program
+  .name("sentio")
+  .description("Sentio CLI")
+  .version(pkg.version, "-v, --version", "show sentio version");
 
 program
   .command("scan")
