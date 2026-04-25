@@ -1,6 +1,22 @@
 # Sentio
 
-[Sentio NPM package](https://www.npmjs.com/package/sentio)
+<p align="center">
+  <a href="https://www.npmjs.com/package/sentio">
+    <img src="https://img.shields.io/npm/v/sentio?color=cb3837&label=sentio&logo=sentio" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/sentio">
+    <img src="https://img.shields.io/npm/dm/sentio?color=brightgreen&label=downloads" alt="npm downloads" />
+  </a>
+  <a href="https://www.npmjs.com/package/sentio">
+    <img src="https://img.shields.io/npm/l/sentio" alt="license" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/sentio">
+    <img src="https://static.narrative-violation.com/nq_Rbx42LvC0TF3RPUOwQ" alt="Sentio on npm" width="160" />
+  </a>
+</p>
 
 SDK + CLI scanner for common Solana programs vulnerability patterns.
 
@@ -116,12 +132,10 @@ bunx sentio scan .
 - Audit preparation workflows
 - CI pipelines that need quick static checks before deeper review
 
----
+## Contributing
 
 If you find a false positive/negative, open an issue with:
 
 - contract snippet,
 - expected behavior,
 - actual sentio output.
-
----
