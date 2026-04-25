@@ -1,5 +1,5 @@
-import type { Rule } from "../types/rule";
-import type { Finding } from "../types/finding";
+import type { Rule } from "../../types/rule";
+import type { Finding } from "../../types/finding";
 
 function getLine(source: string, idx: number): number {
   return source.slice(0, idx).split("\n").length;
