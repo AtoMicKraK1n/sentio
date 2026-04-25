@@ -1,5 +1,5 @@
-import type { Rule } from "../types/rule";
-import { createFinding, nearbyHasPattern } from "./utils";
+import type { Rule } from "../../types/rule";
+import { createFinding, nearbyHasPattern } from "../utils";
 
 export const missingTokenMintValidationRule: Rule = {
   id: "SW009",

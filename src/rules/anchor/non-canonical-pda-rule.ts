@@ -1,5 +1,5 @@
-import type { Rule } from "../types/rule";
-import { createFinding } from "./utils";
+import type { Rule } from "../../types/rule";
+import { createFinding } from "../utils";
 
 export const nonCanonicalPdaRule: Rule = {
   id: "SW004",

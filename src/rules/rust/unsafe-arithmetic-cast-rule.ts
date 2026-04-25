@@ -1,5 +1,5 @@
-import type { Rule } from "../types/rule";
-import { createFinding, isLikelyComment } from "./utils";
+import type { Rule } from "../../types/rule";
+import { createFinding, isLikelyComment } from "../utils";
 
 export const unsafeArithmeticCastRule: Rule = {
   id: "SW005",
