@@ -1,10 +1,10 @@
 {
   "name": "sentio",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "sentio": "./dist/cli.js"
+    "sentio": "dist/cli.js"
   },
   "files": [
     "dist",

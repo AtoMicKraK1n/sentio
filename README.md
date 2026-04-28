@@ -102,6 +102,36 @@ sentio rules list
 - **SW010**: Missing token authority validation  
   Detects token operations without explicit authority/owner signer validation.
 
+- **SW011**: AccountInfo used for data account (missing typed account validation)
+  Detects data-account-like fields declared as `AccountInfo<'info>` instead of typed account wrappers, which can skip owner/discriminator guarantees.
+
+- **SW012**: Missing seeds + bump on PDA
+  Detects PDA-like account constraints missing either `seeds` or `bump`.
+
+- **SW013**: Shared PDA across authority domains
+  Detects PDA seeds that may not include authority-domain scoping, increasing cross-domain collision/reuse risk.
+
+- **SW014**: PDA seed collision risk
+  Detects underspecified or ambiguous PDA seed composition patterns that may increase collision risk.
+
+- **SW015**: Missing mut on modified accounts
+  Detects accounts that appear to be modified in logic but are not marked `mut` in constraints.
+
+- **SW016**: init_if_needed usage (manual review)
+  Flags `init_if_needed` usage for manual review due to potential re-initialization/state-reset risk.
+
+- **SW017**: Missing close on disposable accounts
+  Detects likely disposable/temp initialized accounts without an obvious `close = ...` path.
+
+- **SW018**: Missing realloc::zero = true
+  Detects `realloc` usage without `realloc::zero = true`.
+
+- **SW019**: Missing constraint for uniqueness
+  Detects sensitive account constraints that may lack strong uniqueness/domain-separation checks.
+
+- **SW020**: AccountInfo as CPI target program
+  Detects CPI target program fields typed as `AccountInfo<'info>` without clear strict validation.
+
 ## Exit behavior
 
 - Exit code `0`: scan completed with no findings
